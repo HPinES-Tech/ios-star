@@ -21,7 +21,7 @@ As of **right now** the phone boots to the **iOS home screen**. You can unlock i
 | --- | --- |
 | Boot | Stock Xiaomi bootloader → `fastboot boot` of our shim → XNU. Nothing is flashed to the boot partitions |
 | CPU | 4 of the 8 cores (the four Cortex-A55) via PSCI, 16K pages, GICv3 interrupts, timers |
-| Memory | upper DDR banks are unconfirmed |
+| Memory | Upper DDR banks are unconfirmed |
 | Storage | Own UFS host driver; the iOS root is a journaled HFS+ volume in `userdata`, read/write |
 | iOS userland | Real iPhone X 16.7.16 root filesystem and shared cache; launchd and the system daemons run |
 | Display | Kernel IOSurface + IOMobileFramebuffer (`AppleCLCD`) services; CoreAnimation renders in software; frames are copied into the bootloader's framebuffer. Presented to iOS as an iPhone X panel (1125×2436) |
