@@ -38,7 +38,7 @@ As of **right now** the phone boots to the **iOS home screen**. You can unlock i
 - **No Wi-Fi, Bluetooth, cellular, audio, camera, sensors, GPS or SEP / Face ID.** Daemons for them start and fail or keep relaunching.
 - **No GPU.** Everything is drawn by the CPU at roughly <30 fps. The Cortex-X1 cores and the three Cortex-A78 are not used yet.
 - **Few apps.** The image has only what is on the system volume. There is no App Store, no Apple ID, and some Settings pages are empty.
-- **Slow boot:** about 4 minutes on the Apple logo.
+- **Slow boot:** about a few minutes on the Apple logo.
 - **Security is off:** permissive code signing (AMFI) and sandbox policies, a stub AppleKeyStore, no data protection. Do not put anything personal on it.
 
 ## How it boots
@@ -73,8 +73,8 @@ python3 tools/unpack_bootv2.py backup/boot.img dtb/boot_unpacked   # -> dtb/boot
 The kernel builds on GitHub's macOS runners with [blacktop/darwin-xnu-build](https://github.com/blacktop/darwin-xnu-build). The workflow fetches xnu-8796, applies `xnu/patches/` in order, and also stages the pinned open-source libpthread, HFS and BearSSL sources it needs. Fork the repo (public repos get free macOS minutes) and run:
 
 ```sh
-gh workflow run xnu.yml -R YOU/ios-sweet
-gh run download RUN_ID -R YOU/ios-sweet -n xnu-kernel -D xnu/out
+gh workflow run xnu.yml -R YOU/ios-star --ref xnu-8796
+gh run download RUN_ID -R YOU/ios-star -n xnu-kernel -D xnu/out
 ```
 
 To check a patch locally before spending a CI run, `tools/xnu-cc.py` replays the compile commands of a previous CI log for single files.
