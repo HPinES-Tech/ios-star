@@ -1,8 +1,8 @@
 # Project iOS Star
 
-**Apple's iOS running on a Xiaomi Mi 11 Ultra.**
+**Apple's iOS running on a Xiaomi Mi 11 Pro/Ultra.**
 
-This project ports Apple's open-source XNU kernel to the Xiaomi Mi 11 Ultra (`star`, Qualcomm SM8350 / Snapdragon 888). On top of it runs the **unmodified iOS userland**
+This project ports Apple's open-source XNU kernel to the Xiaomi Mi 11 Pro/Ultra (`star`, Qualcomm SM8350 / Snapdragon 888). On top of it runs the **unmodified iOS userland**
 
 > Experimental bring-up, not a usable phone OS. Many things are missing or stubbed, and Apple's security model is mostly switched off. It installs into the `userdata` partition and so **erases Android's user data**.
 
