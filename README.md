@@ -7,11 +7,11 @@
 
 # xnu-8796 (iOS 16 generation)
 
-**Apple's iOS 16 running on a Xiaomi Mi 11 Ultra**
+**Apple's iOS 16 running on a Xiaomi Mi 11 Pro/Ultra**
 
 `Fork of` [`dipa-studio/ios-sweet`](https://github.com/dipa-studio/ios-sweet/)
 
-This branch have a port of Apple's open-source XNU kernel (xnu-8796, the iOS 16 generation) for the Xiaomi Mi 11 Ultra (`star`, Qualcomm SM8350 / Snapdragon 888). On top of it runs the **unmodified iOS 16.7.16 (20H392) userland of the iPhone X**: launchd, the system daemons, backboardd, SpringBoard and the stock apps.
+This branch have a port of Apple's open-source XNU kernel (xnu-8796, the iOS 16 generation) for the Xiaomi Mi 11 Pro/Ultra (`star`, Qualcomm SM8350 / Snapdragon 888). On top of it runs the **unmodified iOS 16.7.16 (20H392) userland of the iPhone X**: launchd, the system daemons, backboardd, SpringBoard and the stock apps.
 
 As of **right now** the phone boots to the **iOS home screen**. You can unlock it, open Settings, pull down Control Center and the notification center, and use the touchscreen and the hardware buttons. Rendering runs entirely on the CPU; there is no GPU driver.
 
@@ -56,7 +56,7 @@ There is no serial port (the debug UART is wired as SPI on this board). The kern
 
 ## How to do it yourself
 
-You need a Xiaomi Mi 11 Ultra (`star`, global or Indian variant, SM8350) with an **unlocked bootloader**, a Linux PC, and a GitHub account for the kernel build. This is the exact path used for the screenshots above; other variants or firmware may need changes. **Everything on `userdata` is lost.** Bootloaders, recovery, modem and persist partitions are never touched.
+You need a Xiaomi Mi 11 Pro/Ultra (`star`, global or Indian variant, SM8350) with an **unlocked bootloader**, a Linux PC, and a GitHub account for the kernel build. This is the exact path used for the screenshots above; other variants or firmware may need changes. **Everything on `userdata` is lost.** Bootloaders, recovery, modem and persist partitions are never touched.
 
 ### 0. Back up the phone
 
