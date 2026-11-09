@@ -26,7 +26,7 @@ As of **right now** the phone boots to the **iOS home screen**. You can unlock i
 | iOS userland | Real iPhone X 16.7.16 root filesystem and shared cache; launchd and the system daemons run |
 | Display | Kernel IOSurface + IOMobileFramebuffer (`AppleCLCD`) services; CoreAnimation renders in software; frames are copied into the bootloader's framebuffer. Presented to iOS as a device's real panel resolution (1440×3200) |
 | GUI | backboardd, SpringBoard, lock screen, home screen, Control Center, notification center, Settings |
-| Touch | STM FTS over SPI (QUP SPI11), power rail and reset sequencing TBD, delivered as HID digitizer events |
+| Touch | FTS touchscreen controller over SPI (QUP SPI11), rail enabled through TBD, delivered as HID digitizer events |
 | Buttons | Power, volume up/down (PMIC through SPMI) as HID consumer keys; lock/wake works |
 | Battery | IOPMPowerSource service (static 100 %, charging icon; real fuel-gauge readout prepared) |
 | Device identity | iPhone X (`iPhone10,3` / `D22AP`): no Home button, gesture UI |
