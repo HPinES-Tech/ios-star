@@ -27,7 +27,7 @@ As of **right now** the phone boots to the **iOS home screen**. You can unlock i
 | Display | Kernel IOSurface + IOMobileFramebuffer (`AppleCLCD`) services; CoreAnimation renders in software; frames are copied into the bootloader's framebuffer. Presented to iOS as a device's real panel resolution (1440×3200) |
 | GUI | backboardd, SpringBoard, lock screen, home screen, Control Center, notification center, Settings |
 | Touch | FTS touchscreen controller over SPI (QUP SPI11), rail enabled through TBD, delivered as HID digitizer events |
-| Buttons | Power, volume up/down (PMIC through SPMI) as HID consumer keys; lock/wake works |
+| Buttons | Power, volume up/down (PMIC PON and PM8350 GPIO6) as HID consumer keys; lock/wake works |
 | Battery | IOPMPowerSource service (static 100 %, charging icon; real fuel-gauge readout prepared) |
 | Device identity | iPhone X (`iPhone10,3` / `D22AP`): no Home button, gesture UI |
 | Activation | Native "Hactivation" path of mobileactivationd, chosen through device-tree security status. No Apple servers involved |
@@ -36,7 +36,7 @@ As of **right now** the phone boots to the **iOS home screen**. You can unlock i
 
 - **Navigation:** you cannot leave an app (the home gesture and AssistiveTouch Home do nothing yet).
 - **No Wi-Fi, Bluetooth, cellular, audio, camera, sensors, GPS or SEP / Face ID.** Daemons for them start and fail or keep relaunching.
-- **No GPU.** Everything is drawn by the CPU at roughly 20–30 fps. The two Cortex-A76 cores are not used yet.
+- **No GPU.** Everything is drawn by the CPU at roughly <30 fps. The Cortex-X1 cores and the three Cortex-A78 are not used yet.
 - **Few apps.** The image has only what is on the system volume. There is no App Store, no Apple ID, and some Settings pages are empty.
 - **Slow boot:** about 4 minutes on the Apple logo.
 - **Security is off:** permissive code signing (AMFI) and sandbox policies, a stub AppleKeyStore, no data protection. Do not put anything personal on it.
@@ -52,15 +52,15 @@ ABL (stock Xiaomi bootloader, unlocked)
               -> dyld + shared cache -> launchd -> daemons -> backboardd + SpringBoard
 ```
 
-There is no serial port (the debug UART is wired as SPI on this board). The kernel draws its console into the framebuffer that ABL leaves at `0x9c000000`, and keeps a persistent 4 MiB log ring at the end of `userdata`. You read that log from OrangeFox recovery with `tools/sweet-log-pull.sh`, so you don't have to film the screen.
+There is no serial port (the debug UART is wired as SPI on this board). The kernel draws its console into the framebuffer, and keeps a persistent 4 MiB log ring at the end of `userdata`. You read that log from TWRP recovery with `tools/star-log-pull.sh`, so you don't have to film the screen.
 
 ## How to do it yourself
 
-You need a Redmi Note 10 Pro (`sweet`, global or Indian variant, SM7150) with an **unlocked bootloader**, a Linux PC, and a GitHub account for the kernel build. This is the exact path used for the screenshots above; other variants or firmware may need changes. **Everything on `userdata` is lost.** Bootloaders, recovery, modem and persist partitions are never touched.
+You need a Xiaomi Mi 11 Ultra (`star`, global or Indian variant, SM8350) with an **unlocked bootloader**, a Linux PC, and a GitHub account for the kernel build. This is the exact path used for the screenshots above; other variants or firmware may need changes. **Everything on `userdata` is lost.** Bootloaders, recovery, modem and persist partitions are never touched.
 
 ### 0. Back up the phone
 
-Boot OrangeFox (or any recovery with adb root) temporarily and pull at least `persist`, `modemst1`, `modemst2`, `fsg`, `fsc` and `boot`, `dtbo`, `vbmeta`. They contain per-device calibration data. Keep them off git; `.gitignore` already excludes `backup/`, `dtb/` and `recovery/`.
+Boot TWRP (or any recovery with adb root) temporarily and pull at least `persist`, `modemst1`, `modemst2`, `fsg`, `fsc` and `boot`, `dtbo`, `vbmeta`. They contain per-device calibration data. Keep them off git; `.gitignore` already excludes `backup/`, `dtb/` and `recovery/`.
 
 The shim needs the stock DTB. Unpack your phone's stock `boot.img`:
 
