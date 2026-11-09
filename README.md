@@ -60,7 +60,7 @@ You need a Xiaomi Mi 11 Ultra (`star`, global or Indian variant, SM8350) with an
 
 ### 0. Back up the phone
 
-Boot TWRP (or any recovery with adb root) temporarily and pull at least `persist`, `modemst1`, `modemst2`, `fsg`, `fsc` and `boot`, `dtbo`, `vbmeta`. They contain per-device calibration data. Keep them off git; `.gitignore` already excludes `backup/`, `dtb/` and `recovery/`.
+Boot TWRP (or any recovery with adb root) temporarily and pull at least `persist`, `modemst1`, `modemst2`, `fsg`, `fsc`, `boot_a`, `boot_b`, `dtbo_a`, `dtbo_b`, `vbmeta_a`, `vbmeta_b` in `/dev/block/by-name/`. They contain per-device calibration data. Keep them off git; `.gitignore` already excludes `backup/`, `dtb/` and `recovery/`.
 
 The shim needs the stock DTB. Unpack your phone's stock `boot.img`:
 
