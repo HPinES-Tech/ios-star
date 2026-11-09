@@ -65,7 +65,7 @@ Boot TWRP (or any recovery with adb root) temporarily and pull at least `persist
 The shim needs the stock DTB. Unpack your phone's stock `boot.img`:
 
 ```sh
-python3 tools/unpack_bootv2.py backup/boot.img dtb/boot_unpacked   # -> dtb/boot_unpacked/dtb
+python3 tools/unpack_bootv4.py backup/boot.img dtb/boot_unpacked   # -> dtb/boot_unpacked/dtb
 ```
 
 ### 1. Build the kernel
