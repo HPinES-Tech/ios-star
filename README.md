@@ -14,7 +14,7 @@ This project ports Apple's open-source XNU kernel to the Xiaomi Mi 11 Pro/Ultra 
 |xnu-6153|iOS 13|Not Exist|Unplanned||
 |xnu-7195|iOS 14|Not Exist|Unplanned||
 |xnu-8020|iOS 15|Not Exist|Unplanned||
-|xnu-8796|iOS 16|Unusable|Planned|[View](https://github.com/HPinES-Tech/ios-star/tree/xnu-8796)|
+|xnu-8796|iOS 16|Unusable|Working-on|[View](https://github.com/HPinES-Tech/ios-star/tree/xnu-8796)|
 |xnu-10063|iOS 17|Not Exist|Unplanned||
 |xnu-11417|iOS 18|Not Exist|Unplanned||
 |xnu-12377|iOS 26|Not Exist|Unplanned||
