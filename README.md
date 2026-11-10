@@ -70,7 +70,7 @@ python3 tools/unpack_bootv4.py backup/vendor_boot.img dtb/vendor_boot_unpacked  
 Do not use `unpack_bootv4.py` unless you want to extract the `kernel`, `ramdisk`, and `header.txt` contained within `boot.img` (which does not include the `dtb`) using the following command:
 
 ```sh
-python3 tools/unpack_bootv4.py backup/boot.img bid/boot_unpacked   # -> bid/boot_unpacked/
+python3 tools/unpack_bootv4.py backup/boot.img data/boot_unpacked   # -> data/boot_unpacked/
 ```
 
 ### 1. Build the kernel
