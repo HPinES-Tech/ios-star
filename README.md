@@ -16,7 +16,7 @@ As of **right now** the phone boots to the **iOS home screen**. You can unlock i
 | Area | State |
 | --- | --- |
 | Boot | Stock Xiaomi bootloader → `fastboot boot` of our shim → XNU. Nothing is flashed to the boot partitions |
-| CPU | 4 of the 8 cores (the four Cortex-A55) via PSCI, 16K pages, GICv3 interrupts, timers |
+| CPU | 8 of the 8 cores (the four Cortex-A55, the three Cortex-A78 and the Cortex-X1) via PSCI, 16K pages, GICv3 interrupts, timers |
 | Memory | Upper DDR banks are unconfirmed |
 | Storage | Own UFS host driver; the iOS root is a journaled HFS+ volume in `userdata`, read/write |
 | iOS userland | Real iPhone X 16.7.16 root filesystem and shared cache; launchd and the system daemons run |
@@ -32,7 +32,7 @@ As of **right now** the phone boots to the **iOS home screen**. You can unlock i
 
 - **Navigation:** you cannot leave an app (the home gesture and AssistiveTouch Home do nothing yet).
 - **No Wi-Fi, Bluetooth, cellular, audio, camera, sensors, GPS or SEP / Face ID.** Daemons for them start and fail or keep relaunching.
-- **No GPU.** Everything is drawn by the CPU at roughly <30 fps. The Cortex-X1 cores and the three Cortex-A78 are not used yet (bc of arm64e architecture).
+- **No GPU.** Everything is drawn by the CPU at roughly <30 fps.
 - **Few apps.** The image has only what is on the system volume. There is no App Store, no Apple ID, and some Settings pages are empty.
 - **Slow boot:** about a few minutes on the Apple logo.
 - **Security is off:** permissive code signing (AMFI) and sandbox policies, a stub AppleKeyStore, no data protection. Do not put anything personal on it.
@@ -110,7 +110,7 @@ Needs `aarch64-linux-gnu-gcc` and `mkbootimg`.
 ```sh
 python3 tools/mkadt.py shim/out/star.adt --highmem
 python3 tools/mkpayload.py xnu/out/kernel.development.star shim/out/star.adt shim/out/payload.bin \
-    --cmdline 'debug=0xc serial=3 cpus=4 keepsyms=1 -enable_kprintf_spam -noprogress rd=ufsroot0 unentitled_ios_sim_launch=1 ignition_level=1 wdt_test=no_user_checkin ufsrw=1 rootrw=1 launchd_unsecure_cache=1 wdt=-1 starfb_noconsole=1 starfb_hz=30'
+    --cmdline 'debug=0xc serial=3 cpus=8 keepsyms=1 -enable_kprintf_spam -noprogress rd=ufsroot0 unentitled_ios_sim_launch=1 ignition_level=1 wdt_test=no_user_checkin ufsrw=1 rootrw=1 launchd_unsecure_cache=1 wdt=-1 starfb_noconsole=1 starfb_hz=30'
 shim/build.sh ../shim/out/payload.bin      # -> shim/out/shim-boot.img
 ```
 
@@ -119,7 +119,7 @@ What the less obvious boot-args do:
 | Boot-arg | Effect |
 | --- | --- |
 | `rd=ufsroot0 ufsrw=1 rootrw=1` | Root on the `userdata` partition, writable |
-| `cpus=4` | Start the four A55 cores; `cpus=1` is the safe fallback |
+| `cpus=8` | Start all cores (4x Cortex-A55, 3x Cortex-A78, 1x Cortex-X1); `cpus=1` is the safe fallback |
 | `launchd_unsecure_cache=1` | launchd accepts its job cache without AMFI |
 | `wdt=-1 wdt_test=no_user_checkin` | No hardware watchdog |
 | `starfb_noconsole=1` | Stop drawing kernel text over the GUI. It still goes to the persistent log; panics are drawn |
@@ -163,40 +163,6 @@ The log contains crash reports with backtraces (`CRASH name ...`), IOKit traces 
 | `tools/adt.py`, `remotezip.py`, `unpack_vbootv3.py`, `unpack_bootv3.py`, `sparsediff.py` | Helpers |
 
 Not in git: partition backups, live device trees, recovery images, Apple firmware and root images, and downloaded or generated build trees. They contain device serials and calibration data, or Apple's copyrighted files.
-
-## Kernel patches
-
-| # | What |
-| --- | --- |
-| 0001–0009 | Toolchain compatibility, STAR machine config, non-PAC arm64, stubs for Apple-internal pieces |
-| 0010–0018 | Early framebuffer console, physmap fix, PRNG without corecrypto, device-tree platform expert, timer PPI, boot CPU driver |
-| 0019–0020 | Apple open-source libpthread kernel provider; BearSSL AES |
-| 0021–0027 | RAM-disk root, mockfs, SHA-256, minimal AMFI, Apple open-source HFS+, MD5 |
-| 0028–0034 | UFS host driver and root device, read/write root, DMA above 4 GiB |
-| 0035–0045 | Entitlements, bindfs, AppleKeyStore stub, IOWatchdog, console crash reports |
-| 0046 | IOSurface (IOCoreSurfaceRoot) and IOMobileFramebuffer (AppleCLCD) services |
-| 0047–0055 | Diagnostics: persistent log, /dev/null tee, IOKit trace, heap strings and user stack sampler on crash; permissive Sandbox policy; HFS rename-swap; AppleKeyStore selectors |
-| 0056–0057 | Throttled panel copy; no external identity resolver |
-| 0058 | HID event services. Apple's IOHIDFamily-1915.140.3 user client and event queue, matching the iOS 16.7 userland |
-| 0059 | iPhone X identity (`hw.product` / `hw.target` from the device tree) |
-| 0060 | Power and volume keys over PMIC PON and PM8350 GPIO6; touch over QUP SPI11 |
-| 0061 | Present the display as 1440x3200 |
-| 0062 | TPD regulator vote for the touch rail; battery power source |
-| 0063 | QUP SPI11 packing fix and the FTS protocol |
-| 0064 | Grant PRIV_WORK_INTERVAL (UIKit's CoreAnimation work interval) |
-| 0065 | SMP: secondary A55 cores via PSCI CPU_ON |
-| 0066–0067 | Fault-region crash info; console mute |
-| 0068 | IOSurface lookup semantics for already-mapped surfaces |
-| 0069 | Batched persistent-log flushes |
-
-## Key hardware facts
-
-- RAM: payloads use the upper bank, above Qualcomm's protected carve-outs.
-- GICv3 with security extensions: the timer goes through Group 1 IRQ (virtual timer INTID 19), not FIQ as on Apple silicon.
-- PSCI through `smc`, 19.2 MHz timer, ARMv8.2 without pointer authentication. MPIDR uses Aff1 for the core number.
-- Panel: 1440x3200 DSC video mode, continuous splash from ABL, no refresh kick needed.
-- Touch: FTP on QUP SPI11, through TBD.
-- Buttons: Power, volume up/down on the PMIC PON and PM8350 GPIO6.
 
 ## Credits
 
