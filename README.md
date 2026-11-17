@@ -74,7 +74,7 @@ python3 tools/unpack_bootv3.py backup/boot.img data/boot_unpacked   # -> data/bo
 The kernel builds on GitHub's macOS runners with [blacktop/darwin-xnu-build](https://github.com/blacktop/darwin-xnu-build). The workflow fetches xnu-8796, applies `xnu/patches/` in order, and also stages the pinned open-source libpthread, HFS and BearSSL sources it needs. Fork the repo (public repos get free macOS minutes) and run:
 
 ```sh
-gh workflow run xnu.yml -R YOU/ios-star --ref xnu-8796
+gh workflow run by-ver/8796/xnu.yml -R YOU/ios-star --ref xnu-8796
 gh run download RUN_ID -R YOU/ios-star -n xnu-kernel -D xnu/out
 ```
 
