@@ -15,7 +15,7 @@ As of **right now** the phone boots to the **iOS home screen**. You can unlock i
 
 | Area | State |
 | --- | --- |
-| Boot | Stock Xiaomi bootloader → `fastboot boot` of our shim → XNU. Nothing is flashed to the boot partitions |
+| Boot | Stock Xiaomi bootloader → `fastboot boot` of our shim → XNU. Nothing is flashed to the boot_a or boot_b partitions |
 | CPU | 8 of the 8 cores (the four Cortex-A55, the three Cortex-A78 and the Cortex-X1) via PSCI, 16K pages, GICv3 interrupts, timers |
 | Memory | Upper DDR banks are unconfirmed |
 | Storage | Own UFS host driver; the iOS root is a journaled HFS+ volume in `userdata`, read/write |
@@ -41,7 +41,7 @@ As of **right now** the phone boots to the **iOS home screen**. You can unlock i
 
 ```
 ABL (stock Xiaomi bootloader, unlocked)
-  -> fastboot boot shim-boot.img              (temporary; nothing is flashed to boot)
+  -> fastboot boot shim-boot.img              (temporary; nothing is flashed to boot_a or boot_b)
      -> shim: own MMU setup, reads the live FDT, loads the payload from the ramdisk
         -> XNU Mach-O + generated Apple Device Tree (ADT) + boot-args
            -> XNU -> UFS driver -> HFS+ root in the userdata partition
@@ -58,7 +58,7 @@ You need a Xiaomi Mi 11 Ultra (`star`, global or Indian variant, SM8350) with an
 
 Boot TWRP (or any recovery with adb root) temporarily and pull at least `persist`, `modemst1`, `modemst2`, `fsg`, `fsc`, `boot_a`, `boot_b`, `dtbo_a`, `dtbo_b`, `vbmeta_a`, `vbmeta_b` in '/dev/block/by-name/'. They contain per-device calibration data. Keep them off git; `.gitignore` already excludes `backup/`, `dtb/`, `/data` and `recovery/`.
 
-The shim needs the stock DTB. Unpack your phone's stock `boot.img`:
+The shim needs the stock DTB. Unpack your phone's stock `vendor_boot.img`:
 
 ```sh
 python3 tools/unpack_vbootv3.py backup/vendor_boot.img dtb/vendor_boot_unpacked   # -> dtb/vendor_boot_unpacked/dtb
